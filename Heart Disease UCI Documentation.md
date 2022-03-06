@@ -4,14 +4,14 @@
 
 #### Install MongoDB compass:  
 - https://www.mongodb.com/products/compass
-<br/>
+
 #### Install Postman: 
 - https://www.postman.com/downloads/
 #### Import Postman collection:
 ###### json file was sent to you
 #### View API documentation:
 - https://documenter.getpostman.com/view/13930521/UVkvJsNQ
-<br/>
+
 #### Clone Git repo with:
 - https://github.com/Anuk87/heart_disease_uci_project
 #### Install all packages with:
