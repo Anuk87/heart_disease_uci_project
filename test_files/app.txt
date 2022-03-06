@@ -1,0 +1,94 @@
+import json
+import pickle
+from flask import Flask, request, Response
+from database.db import initialize_db
+from database.models import Movie, Tester
+import numpy as np
+from validators import validator
+from helpers import helpers
+
+app = Flask(__name__)
+app.config['MONGODB_SETTINGS'] = {
+    'host': 'mongodb://localhost/heart_disease'
+}
+initialize_db(app)
+model = pickle.load(open('saved_ml_models/ROS/voting_classifier.pickle', 'rb'))     # Load ML model
+
+
+@app.route('/movies')
+def get_movies():
+    movies = Movie.objects().to_json()
+    return Response(movies, mimetype="application/json", status=200)
+
+
+@app.route('/movies/<id>')
+def get_movie(id):
+    movies = Movie.objects.get(id=id).to_json()
+    return Response(movies, mimetype="application/json", status=200)
+
+
+@app.route('/movies', methods=['POST'])
+def add_movie():
+    body = request.get_json()
+    movie = Movie(**body).save()
+    id = movie.id
+    return {'id': str(id)}, 200
+
+
+@app.route('/movies/<id>', methods=['PUT'])
+def update_movie(id):
+    body = request.get_json()
+    Movie.objects.get(id=id).update(**body)
+    return '', 200
+
+
+@app.route('/movies/<id>', methods=['DELETE'])
+def delete_movie(id):
+    Movie.objects.get(id=id).delete()
+    return '', 200
+
+
+# Bind predict function to URL
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        keys = [i for i in request.form.keys()]
+        values = [float(j) for j in request.form.values()]
+        validated = validator.patient_data_validator(keys, values)
+
+        if validated[0]:
+            tester = helpers.list_to_dict(keys, values)
+            # json_object = json.dumps(tester)    # Serializing json
+
+            tester_entry = Tester(**tester).save()
+            tester_id = tester_entry.id
+
+            # print("json: ", json_object)
+            # print("tester: ", tester_id)
+            # print("dict: ", tester)
+            '''
+                features = [float(i) for i in request.form.values()]    # Put all form entries values in a list
+                array_features = [np.array(features)]   # Convert features to array
+                prediction = model.predict(array_features)  # Predict features
+                output = prediction
+
+                # Check the output values and retrieve the result with html tag based on the value
+                if output == 1:
+                    return 'The patient is not likely to have heart disease!', 200
+                else:
+                    return 'The patient is likely to have heart disease!', 200
+
+            '''
+            if tester_id:
+                res = {
+                    "message": "Details saved successfully",
+                    "tester_id": str(tester_id),
+                }
+                return res, 200
+        else:
+            return 'Validation error. {error}'.format(error=validated[1]), 422
+    except ValueError:
+        return 'Invalid data type for value. Must be a float or int.', 422
+
+
+app.run()

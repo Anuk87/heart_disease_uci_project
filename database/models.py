@@ -1,0 +1,27 @@
+from mongoengine import DateTimeField
+from .db import db
+import datetime
+
+
+class Tester(db.Document):
+    age = db.FloatField(required=True)
+    sex = db.FloatField(required=True)  # 0 or 1
+    cp = db.FloatField(required=True)
+    trestbps = db.FloatField(required=True)
+    chol = db.FloatField(required=True)
+    fbs = db.FloatField(required=True)
+    restecg = db.FloatField(required=True)
+    thalach = db.FloatField(required=True)
+    exang = db.FloatField(required=True)
+    oldpeak = db.FloatField(required=True)
+    slope = db.FloatField(required=True)
+    ca = db.FloatField(required=True)
+    thal = db.FloatField(required=True)
+    createdAt = DateTimeField(default=datetime.datetime.utcnow)
+
+
+class Test(db.Document):
+    tester_id = db.StringField(required=True)
+    result = db.StringField(required=True)  # '1' or '2'
+    description = db.StringField(required=True)
+    createdAt = DateTimeField(default=datetime.datetime.utcnow)
