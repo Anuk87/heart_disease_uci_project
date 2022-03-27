@@ -4,9 +4,11 @@ from flask_restful import Resource
 from flask import Response, request
 from validators import validator
 from helpers import helpers
+from flask_cors import cross_origin
 
 
 class TesterApi(Resource):
+    @cross_origin()
     def get(self, id):
         """
         :param id: tester id
@@ -22,6 +24,7 @@ class TesterApi(Resource):
             }
             return res, 500
 
+    @cross_origin()
     def post(self):
         """
         :return: tester data after saving to db
@@ -67,6 +70,7 @@ class TesterApi(Resource):
             }
             return res, 422
 
+    @cross_origin()
     def delete(self, id):
         """
         :param id: tester id

@@ -4,9 +4,11 @@ from flask_restful import Resource
 from flask import Response, request
 from validators import validator
 from helpers import helpers
+from flask_cors import cross_origin
 
 
 class TestApi(Resource):
+    @cross_origin()
     def get(self, id):
         """
         :param id: test id
@@ -22,6 +24,7 @@ class TestApi(Resource):
             }
             return res, 500
 
+    @cross_origin()
     def delete(self, id):
         """
         :param id: test id

@@ -5,9 +5,11 @@ from flask import Response, request
 from validators import validator
 from helpers import helpers
 from flask_restful import reqparse
+from flask_cors import cross_origin
 
 
 class TestersApi(Resource):
+    @cross_origin()
     def get(self):
         """
         :return: all testers in db

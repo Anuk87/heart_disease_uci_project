@@ -4,16 +4,18 @@ from flask_restful import Resource
 from flask import Response, request
 from validators import validator
 from helpers import helpers
+from flask_cors import cross_origin
 
 
 class DeleteTestApi(Resource):
+    @cross_origin()
     def delete(self, id):
         """
         :param id: test id
         :return: delete success response
         """
         try:
-            Test.objects().get(id=id).delete()
+            Test.objects.get(id=id).delete()
             res = {
                 "message": 'Test successfully deleted',
                 "test_id": str(id)

@@ -14,6 +14,7 @@ scipy = "==1.7.3"
 imbalanced-learn = "*"
 flask-restful = "*"
 flask = "*"
+flask-cors = "*"
 
 [dev-packages]
 
